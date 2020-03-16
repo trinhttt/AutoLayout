@@ -21,6 +21,9 @@ class ViewController: UIViewController {
     }
     
     private func setupView() {
+        let grayView = UIView()
+        grayView.backgroundColor = .lightGray
+        
         let redView = UIView()
         redView.backgroundColor = .red
         
@@ -29,17 +32,28 @@ class ViewController: UIViewController {
         
         let greenView = UIView()
         greenView.backgroundColor = .green
-        [redView, blueView, greenView].forEach{ view.addSubview($0)}
+        [grayView, redView, blueView, greenView].forEach{ view.addSubview($0)}
+        grayView.fillSuperView()
         
         redView.anchor2(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, bottom: nil, padding: .init(top: 0, left: 0, bottom: 0, right: 12), size: CGSize(width: 100, height: 100))
         
-        blueView.anchor2(top: redView.bottomAnchor, leading: nil, trailing: redView.trailingAnchor, bottom: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: CGSize(width: 100, height: 100))
+//        blueView.anchor2(top: redView.bottomAnchor, leading: nil, trailing: redView.trailingAnchor, bottom: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: CGSize(width: 100, height: 100))
         
+        // or
+         blueView.anchor2(top: redView.bottomAnchor, leading: nil, trailing: redView.trailingAnchor, bottom: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0))
+        blueView.anchorSize(to: redView)
         greenView.anchor2(top: redView.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: redView.leadingAnchor, bottom: blueView.bottomAnchor, padding: .init(top: 0, left: 12, bottom: 0, right: 12))
     }
 }
 
 extension UIView {
+    func fillSuperView() {
+        anchor2(top: superview?.topAnchor, leading: superview?.leadingAnchor, trailing: superview?.trailingAnchor, bottom: superview?.bottomAnchor)
+    }
+    func anchorSize(to view: UIView) {
+        widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+    }
     func anchor(top: NSLayoutYAxisAnchor, leading: NSLayoutXAxisAnchor, trailing: NSLayoutXAxisAnchor, bottom: NSLayoutYAxisAnchor, padding: UIEdgeInsets = .zero) {
         // (important) enables auto layout
         translatesAutoresizingMaskIntoConstraints = false
